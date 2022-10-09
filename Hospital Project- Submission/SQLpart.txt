@@ -1,0 +1,113 @@
+create database Hospital;
+use Hospital;
+
+create table Employee
+(
+employeeID int constraint empID_pk primary key, 
+Name char(20),
+DOB date,
+salary float, 
+days char(10),
+timing char(20),
+shift char(10),
+nurse_rank int default null, 
+job_type char(10),
+check (lower(shift)='a' or lower(shift)='b' or lower(shift)='c' or shift=''), check(nurse_rank>=1 and nurse_rank <=5 or nurse_rank='')
+);
+
+create table Patient
+(
+patientID int constraint pID_pk primary key,
+Name char(20),
+DOB Date, 
+employeeID int ,
+constraint emplID_fk foreign key(employeeID) references Employee(employeeID) on delete cascade 
+);
+
+create table Payment
+(
+paymentNumber int constraint paymentNum_pk primary key, 
+paymentDate Date, 
+amount float, 
+patientID int, 
+constraint patientID_fk foreign key(patientID) references Patient(patientID) 
+
+);
+
+
+create table Room
+(
+roomNumber int constraint roomNum_pk primary key,
+roomType char(10),
+entry_type char(20),
+patientID int, 
+constraint pID_fk foreign key(patientID) references Patient(patientID),
+check(lower(entry_type)='opd' or lower(entry_type)='emergency' or lower(entry_type)='routine checkup')
+);
+
+
+create table Inventory
+(
+medicine_record char(20),
+medicine_amount int,
+equipment_record char(20),
+equipment_amount int,
+bloodbank_record char(20),
+bloodbank_amount int, 
+employeeID int, 
+constraint employeeID_fk foreign key(employeeID) references Employee(employeeID),
+
+);
+
+insert into Inventory(medicine_record,medicine_amount,equipment_record,equipment_amount,bloodbank_record,bloodbank_amount,employeeID) values ('Amoclan', 26,'Surgical suture',15,'O+',60,1);
+insert into Inventory(medicine_record,medicine_amount,equipment_record,equipment_amount,bloodbank_record,bloodbank_amount,employeeID) values ('Diclofen', 44,'Otoscope',7,'AB+',100,6);
+insert into Inventory(medicine_record,medicine_amount,equipment_record,equipment_amount,bloodbank_record,bloodbank_amount,employeeID) values ('Forxiga', 152,'Scalpel',65,'A-',250,7);
+insert into Inventory(medicine_record,medicine_amount,equipment_record,equipment_amount,bloodbank_record,bloodbank_amount,employeeID) values ('Augmentin', 78,'Feeding tube',310,'B+',300,9);
+insert into Inventory(medicine_record,medicine_amount,equipment_record,equipment_amount,bloodbank_record,bloodbank_amount,employeeID) values ('panadol', 105,'Nebulizer',52,'B-',55,8);
+update Inventory set equipment_record=78 where medicine_record='Amoclan'; 
+select * from Inventory;
+
+
+
+insert into Room(roomNumber,roomType,entry_type,patientID) values (101,'VIP','OPD',2);
+insert into Room(roomNumber,roomType,entry_type,patientID) values (102,'Recovery','Emergency',3);
+insert into Room(roomNumber,roomType,entry_type,patientID) values (55,'X-Ray','Routine checkup',1);
+insert into Room(roomNumber,roomType,entry_type,patientID) values (321,'Surgery','Emergency',4);
+insert into Room(roomNumber,roomType,entry_type,patientID) values (78,'Emergency','Emergency',5);
+select * from Room;
+
+
+insert into Patient(patientID,Name,DOB,employeeID) values (1,'Ali','2012-05-02',1);
+insert into Patient(patientID,Name,DOB,employeeID) values (2,'Nuha','2007-07-02',1);
+insert into Patient(patientID,Name,DOB,employeeID) values (3,'Raneem','1992-09-12',1);
+insert into Patient(patientID,Name,DOB,employeeID) values (4,'Sara','1995-05-22',1);
+insert into Patient(patientID,Name,DOB,employeeID) values (5,'Khalid','1988-08-18',1);
+insert into Patient(patientID,Name,DOB,employeeID) values (7,'Khalid','1988-08-18',5);
+insert into Patient(patientID,Name,DOB,employeeID) values (8,'abdullah','1988-08-18',3);
+insert into Patient(patientID,Name,DOB,employeeID) values (9,'nuha','1988-08-18',3);
+select * from Patient;
+
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(1,'Ziyad','1978-05-14',598.75,'','','A',1,'Nurse');
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(2,'Hala','2000-09-29',798.0,'Thu-Fri','12-5pm','','','Doctor');
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(3,'Qusai','2000-03-17',972.5,'Tue-Wed','2-9am','','','Doctor');
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(4,'Ahmad','1988-02-14',369,'','','B',2,'Nurse');
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(5,' Noor Hedaya','2000-09-14',562.7,'fri','2-9pm','','','Doctor');
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(6,'Hussam','1956-05-04',3698.5,'','','A',1,'Nurse');
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(7,'Sireen','1978-06-23',539.75,'','','A',1,'Nurse');
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(8,'Ahlam','1968-07-15',1592.75,'','','A',1,'Nurse');
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(9,'Duaa','1958-09-14',578.75,'','','A',1,'Nurse');
+insert into Employee(employeeID,Name,DOB,salary,days,timing,shift,nurse_rank,job_type) values(10,'Hazem','1999-05-24',635.85,'','','A',3,'Nurse');
+select * from Employee;
+
+insert into Payment(paymentNumber,paymentDate,amount,patientID) values (235,'2020-05-15',1983.0,1);
+insert into Payment(paymentNumber,paymentDate,amount,patientID) values (236,'2020-05-25',1086.75,2);
+insert into Payment(paymentNumber,paymentDate,amount,patientID) values (237,'2020-09-25',230.8,3);
+insert into Payment(paymentNumber,paymentDate,amount,patientID) values (238,'2020-10-06',356.0,4);
+insert into Payment(paymentNumber,paymentDate,amount,patientID) values (239,'2020-11-17',512.0,5);
+delete from Payment where paymentNumber=239;
+select * from Payment;
+
+select pay.paymentNumber as "Payment Number",pay.paymentDate as "Payment Date",pay.amount as "Amount" ,pay.patientID as "Patient ID" ,pt.Name as "Patient Name" from Payment pay ,Patient pt where pay.patientID=pt.patientID;  
+
+select e.employeeID as "Employee ID" ,  count(p.Name) as "Number of Patients" from Employee e, Patient p  where e.employeeID= p.employeeID group by e.employeeID;
+
